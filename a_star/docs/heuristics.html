@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>heuristics.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>heuristics.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p><code>manhattan_distance</code> takes a sliding tile puzzle and calculates each tile's
+vertical and horizontal distance from the goal state.  It then returns the
+sum of those distances.</p>
+<p>Returns: sum of those distances.</p>
+<p>Parameters:</p>
+<ul>
+<li><code>state</code>: An object of type <code>Puzzle</code>. For this assignment, a
+  <code>SlidingTileState</code> instance will be passed here.</li>
+</ul>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">manhattan_distance</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>The sum of every tile's manhattan distance.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">distance</span> <span class="o">=</span> <span class="mi">0</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>For each row i in the sliding tile puzzle:</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">get_num_rows</span><span class="p">()):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>And for every tile in column j in that row:</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">get_num_cols</span><span class="p">()):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>For the tile at location (i, j):</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">tile</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">tile_at</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>Skip if this is the blank.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="mi">0</span> <span class="o">==</span> <span class="n">tile</span><span class="p">:</span>
+                <span class="k">continue</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>Given a goal state:</p>
+<pre><code>+---+---+---+
+|   | 1 | 2 |
++---+---+---+
+| 3 | 4 | 5 |
++---+---+---+
+| 6 | 7 |*8*|
++---+---+---+
+</code></pre>
+<p>If tile 8 is in posiion (2, 2), and the number of rows <em>n</em> = 3,
+then dividing the tile's value by the number of rows in the
+puzzle reveals its corrent row.</p>
+<pre><code>8 // 3 == 2. # Integer division, drop the fraction.
+</code></pre>
+<p>If the tile's current row <em>i</em> is subtracted, then the absolute
+value of the difference is the vertical distance from it's place
+in the goal state:</p>
+<pre><code>(tile  // n) - i
+(8 // (3)) - (2) == 0
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">vertical_distance</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">tile</span> <span class="o">//</span> <span class="n">state</span><span class="o">.</span><span class="n">get_num_rows</span><span class="p">()</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>The tile's value modulo the number of columns in the puzzle
+reveals its column in the goal state. Then its current column
+is subtracted, and the absolute value of this difference reveals
+the distance from its place in the goal state.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">horizontal_distance</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">((</span><span class="n">tile</span> <span class="o">%</span> <span class="n">state</span><span class="o">.</span><span class="n">get_num_cols</span><span class="p">())</span> <span class="o">-</span> <span class="n">j</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <p>Sum the manhattan distance of all tiles in the current state of
+the puzzle.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">distance</span> <span class="o">=</span> <span class="n">distance</span> <span class="o">+</span> <span class="n">vertical_distance</span> <span class="o">+</span> <span class="n">horizontal_distance</span>
+
+    <span class="k">return</span> <span class="n">distance</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

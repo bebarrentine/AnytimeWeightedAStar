@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>a_star.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>a_star.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>Use Python's implementation of a priority queue to sort the frontier.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">heapq</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>The node class is used to keep track of the explored and frontier states in
+the state space.</p>
+<p>We use the node containing the goal state to generate a solution.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">node</span> <span class="kn">import</span> <span class="n">Node</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>Implementation of A*.</p>
+<p>Returns a list of actions or <code>None</code> if not solution exists.</p>
+<p>Parameters:
+1. <code>problem</code>: An instance of a <code>Problem</code> class. For this exercise, a
+   <code>SlidingTileProblem</code> is used, but any problem implemented using the
+   definition from AIMA 3rd edition can be used as long as the states are
+   atomic and the path costs are non-negative.
+2. <code>heuristic</code>: A reference to the heuristic function used to estimate the
+   length of the solution from the current state. The function should take,
+   as a parameter, the same type of state the <code>problem</code> uses internally.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">a_star</span><span class="p">(</span><span class="n">problem</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">heuristic</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>It is necessary to know which nodes have been explored. Use a dictionary
+to speed up searching for those nodes here.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">explored</span> <span class="o">=</span> <span class="p">{}</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>The first node to be expanded is the <code>problem</code>'s initial state.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">node</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span>
+        <span class="n">state</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">get_initial_state</span><span class="p">(),</span>
+        <span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+        <span class="n">path_cost</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="bp">None</span>
+    <span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>The frontier is implemented as a binary min-heap using Python's heapq
+procedure. The root of the min-heap is the node with the lowest f-cost,
+and extract-min runs in O(log n) time.</p>
+<p>Python's heapq documentation can use tuples as nodes, so the first
+element of the tuple is the node's f-cost and the second element is the
+node.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">frontier</span> <span class="o">=</span> <span class="p">[(</span><span class="n">heuristic</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">state</span><span class="p">)</span> <span class="o">+</span> <span class="n">node</span><span class="o">.</span><span class="n">path_cost</span><span class="p">,</span> <span class="n">node</span><span class="p">)]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p><code>solution</code> is used to store the solution to A*.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">solution</span> <span class="o">=</span> <span class="bp">None</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>Loop while the frontier is not empty.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">while</span> <span class="n">frontier</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <p>Extract-min, then the second element of the tuple is the node to be
+expanded.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">node</span> <span class="o">=</span> <span class="n">heapq</span><span class="o">.</span><span class="n">heappop</span><span class="p">(</span><span class="n">frontier</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>The goal test is applied when a node is expanded versus generated is
+because the generated node containing the goal may be on a
+suboptimal path (AIMA 3rd edition).</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">problem</span><span class="o">.</span><span class="n">goal_test</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">state</span><span class="p">):</span>
+            <span class="k">break</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      <p>Expand the node.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">problem</span><span class="o">.</span><span class="n">actions</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">state</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>Give a state <em>s</em> and an action <em>a</em>, generate the resulting state
+when that action <em>a</em> is taken when in <em>s</em>.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">new_state</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">action</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      <p>Check for a reversal of previous action.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">new_state</span><span class="p">:</span>
+                    <span class="k">continue</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>If there is no grandparent, then there is no action to reverse.
+So do nothing.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">except</span><span class="p">:</span>
+                <span class="bp">None</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      <p>Calculate the step cost. For sliding tile problems, the step
+cost is always equal to 1.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">step_cost</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">step_cost</span><span class="p">(</span>
+                <span class="n">from_state</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">state</span><span class="p">,</span>
+                <span class="n">action</span><span class="o">=</span><span class="n">action</span><span class="p">,</span>
+                <span class="n">to_state</span><span class="o">=</span><span class="n">new_state</span>
+            <span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>Generate a new node.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">child_node</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span>
+                <span class="n">state</span><span class="o">=</span><span class="n">new_state</span><span class="p">,</span>
+                <span class="n">parent</span><span class="o">=</span><span class="n">node</span><span class="p">,</span>
+                <span class="n">path_cost</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">get_path_cost</span><span class="p">()</span> <span class="o">+</span> <span class="n">step_cost</span><span class="p">,</span>
+                <span class="n">action</span><span class="o">=</span><span class="n">action</span>
+            <span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      <p>Search for the node in the frontier.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">in_frontier</span> <span class="o">=</span> <span class="bp">False</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <p>If the node is in the frontier, and the generated state has a
+lower path-cost than the same state in the frontier, then we
+need to keep track of its index in the frontier so we can
+replace it.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">frontier_match</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">frontier_node</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">frontier</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">frontier_node</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">signature</span> <span class="o">==</span> <span class="n">new_state</span><span class="o">.</span><span class="n">signature</span><span class="p">:</span>
+                    <span class="n">in_frontier</span> <span class="o">=</span> <span class="bp">True</span>
+                    <span class="n">frontier_match_index</span> <span class="o">=</span> <span class="n">index</span>
+                    <span class="k">break</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      <p>Only search the explored set if the generated state is not in
+the frontier.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">in_explored</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">in_frontier</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">new_state</span><span class="o">.</span><span class="n">signature</span> <span class="ow">in</span> <span class="n">explored</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      <p>Each key in the dictionary is associated with a list of
+nodes whose packaged state hashes to the same value.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                    <span class="k">for</span> <span class="n">explored_node</span> <span class="ow">in</span> <span class="n">explored</span><span class="p">[</span><span class="n">new_state</span><span class="o">.</span><span class="n">signature</span><span class="p">]:</span>
+                        <span class="k">if</span> <span class="n">explored_node</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">new_state</span><span class="p">:</span>
+                            <span class="n">in_explored</span> <span class="o">=</span> <span class="bp">True</span>
+                            <span class="k">break</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-20'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-20'>#</a>
+      </div>
+      <p>Insert the generated node into the frontier if it's not in the
+frontier and it's not in the explored set. </p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">in_explored</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">in_frontier</span><span class="p">):</span>
+                <span class="n">heapq</span><span class="o">.</span><span class="n">heappush</span><span class="p">(</span>
+                    <span class="n">frontier</span><span class="p">,</span>
+                    <span class="p">(</span>
+                        <span class="n">heuristic</span><span class="p">(</span><span class="n">child_node</span><span class="o">.</span><span class="n">state</span><span class="p">)</span> \
+                            <span class="o">+</span> <span class="n">child_node</span><span class="o">.</span><span class="n">get_path_cost</span><span class="p">(),</span>
+                        <span class="n">child_node</span>
+                    <span class="p">)</span>
+                <span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-21'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-21'>#</a>
+      </div>
+      <p>If a node <em>a</em> is in the frontier, and <em>a</em> has a higher path cost
+than newly generated node <em>b</em>, then replace <em>a</em> with <em>b</em>.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">elif</span> <span class="n">in_frontier</span> <span class="ow">and</span> \
+                <span class="n">frontier</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">path_cost</span> <span class="o">&gt;</span> <span class="n">child_node</span><span class="o">.</span><span class="n">path_cost</span><span class="p">:</span>
+                <span class="n">frontier</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">heuristic</span><span class="p">(</span><span class="n">child_node</span><span class="o">.</span><span class="n">state</span><span class="p">)</span> <span class="o">+</span> <span class="n">child_node</span><span class="o">.</span><span class="n">path_cost</span><span class="p">,</span>
+                    <span class="n">child_node</span>
+                <span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-22'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-22'>#</a>
+      </div>
+      <p>If no list is associated with the key, then associate a new list
+containing only the explored node.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">signature</span> <span class="ow">in</span> <span class="n">explored</span><span class="p">:</span>
+            <span class="n">explored</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">signature</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">explored</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">signature</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-23'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-23'>#</a>
+      </div>
+      <p>If a solution exists, then generate that solution by following parent
+references from the goal node to the root node.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">if</span> <span class="n">problem</span><span class="o">.</span><span class="n">goal_test</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">state</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-24'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-24'>#</a>
+      </div>
+      <p>If the initial state is the goal state, then there will be a null
+action here. So check for a null action.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">get_action</span><span class="p">():</span>
+            <span class="n">solution</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">get_action</span><span class="p">()]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-25'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-25'>#</a>
+      </div>
+      <p>Following the parent nodes sequentially generates a solution in
+reverse, so append each action to the front of the solution
+here.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">while</span> <span class="n">node</span><span class="p">:</span>
+                <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">get_parent</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">node</span> <span class="ow">and</span> <span class="bp">None</span> <span class="o">!=</span> <span class="n">node</span><span class="o">.</span><span class="n">get_action</span><span class="p">():</span>
+                    <span class="n">solution</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">get_action</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">solution</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>sliding_tile_problem.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>sliding_tile_problem.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">problem</span> <span class="kn">import</span> <span class="n">Problem</span>
+<span class="kn">from</span> <span class="nn">sliding_tile_state</span> <span class="kn">import</span> <span class="n">SlidingTileState</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p><code>SlidingTileProblem</code> inherits from <code>Problem</code>.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">SlidingTileProblem</span><span class="p">(</span><span class="n">Problem</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>Constructor for <code>SlidingTileProblem</code>.</p>
+<p>Given a description of the sliding tile puzzle, i.e. <code>i</code> is the number
+of rows, and <code>j</code> is the number of columns, and <code>initial_state</code> is a
+<code>SlidingTileState</code> describing the initial state of the puzzle, construct
+a new SlidingTileProblem.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">j</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">initial_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>Setup <code>SlidingTileProblem</code> like a <code>Problem</code>.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">initial_state</span><span class="o">=</span><span class="n">initial_state</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>Set the number of rows and columns for the problem.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">num_rows</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_cols</span> <span class="o">=</span> <span class="n">j</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>Setup a goal state.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">goal</span> <span class="o">=</span> <span class="n">SlidingTileState</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">=</span><span class="n">j</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>If an initial state wasn't defined, setup an initial state equal to
+the goal state.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="ow">not</span> <span class="n">initial_state</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">initial_state</span> <span class="o">=</span> <span class="n">SlidingTileState</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">=</span><span class="n">j</span><span class="p">)</span>
+
+        <span class="k">return</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p><code>actions</code> returns a list of possible actions that can be taken in
+<code>state</code>.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="n">actions</span> <span class="o">=</span> <span class="p">[]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <p>Test each action so see if we can take it in <code>state</code>.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">can_move</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">UP</span><span class="p">):</span>
+            <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">UP</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">can_move</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">DOWN</span><span class="p">):</span>
+            <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">DOWN</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">can_move</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">LEFT</span><span class="p">):</span>
+            <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">LEFT</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">can_move</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">RIGHT</span><span class="p">):</span>
+            <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">RIGHT</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">actions</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p><code>goal_test</code> returns <code>True</code> if <code>state</code> is a goal state and <code>False</code> if it
+is not.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">goal_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal</span> <span class="o">==</span> <span class="n">state</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      <p><code>result</code> returns a <code>SlidingTileState</code> </p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>Make a copy of <code>state</code> to return.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">resulting_state</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">state</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      <p>Take <code>action</code> in <code>state</code>. Note that if the move cannot be done in
+<code>state</code>, then <code>resulting_state</code> is unmodified.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">resulting_state</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">resulting_state</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p><code>step_cost</code> computes a cost of doing <code>action</code> in <code>from_state</code> to result
+in <code>to_state</code>.</p>
+<p>For the sliding tile puzzle, every swap has a step cost of 1. But if
+<code>action</code> is a null action, or <code>action</code> can't be taken in <code>from_state</code>,
+then the step cost is zero.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">step_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">to_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">None</span> <span class="o">==</span> <span class="n">action</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">from_state</span><span class="o">.</span><span class="n">can_move</span><span class="p">(</span><span class="n">action</span><span class="p">):</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">1</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      <p><code>get_num_rows</code> returns the number of rows the puzzle has in the problem.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">get_num_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_rows</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p><code>get_num_cols</code> returns the number of columns the puzzle has in the
+problem.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">get_num_cols</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_cols</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>
