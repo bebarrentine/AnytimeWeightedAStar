@@ -1,5 +1,5 @@
 # AnytimeWeightedAStar
-Assignment for Dr. Hansen's Artificial Intelligence class (CSE 4633). Used listed algorithim to solve generated 8/15 square puzzles.
+Assignment for Dr. Hansen's Artificial Intelligence class (CSE 4633). Used listed algorithm to solve generated 8/15 square puzzles.
 
 ## Description of Algorithim:
 Unlike A*, Anytime Weighted A* continues to search for a solution even after the first solution is found. This entails
